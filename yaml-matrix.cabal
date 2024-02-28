@@ -1,0 +1,122 @@
+cabal-version: 2.2
+
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           yaml-matrix
+version:        0.1.0.0
+description:    Please see the README on Github at <https://github.com/Lugendre/yaml-matrix#readme>
+category:       Development
+homepage:       https://github.com/Lugendre/yaml-matrix#readme
+bug-reports:    https://github.com/Lugendre/yaml-matrix/issues
+author:         Lugendre
+maintainer:     franfranjk@gmail.com
+copyright:      2024 Lugendre
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/Lugendre/yaml-matrix
+
+library
+  exposed-modules:
+      Data.Yaml.MaybeVariable
+  other-modules:
+      Paths_yaml_matrix
+  autogen-modules:
+      Paths_yaml_matrix
+  hs-source-dirs:
+      src
+  default-extensions:
+      DataKinds
+      DerivingStrategies
+      DisambiguateRecordFields
+      ExplicitNamespaces
+      GADTs
+      LambdaCase
+      RoleAnnotations
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      aeson
+    , attoparsec
+    , barbies
+    , base >=4.11 && <10
+    , bytestring
+    , hashable
+    , text
+    , unliftio
+    , unordered-containers
+    , yaml
+  default-language: GHC2021
+
+executable yaml-matrix
+  main-is: Main.hs
+  other-modules:
+      Paths_yaml_matrix
+  autogen-modules:
+      Paths_yaml_matrix
+  hs-source-dirs:
+      app
+  default-extensions:
+      DataKinds
+      DerivingStrategies
+      DisambiguateRecordFields
+      ExplicitNamespaces
+      GADTs
+      LambdaCase
+      RoleAnnotations
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , attoparsec
+    , barbies
+    , base >=4.11 && <10
+    , bytestring
+    , hashable
+    , optparse-simple
+    , text
+    , unliftio
+    , unordered-containers
+    , yaml
+    , yaml-matrix
+  default-language: GHC2021
+
+test-suite yaml-matrix-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Data.Yaml.MaybeVariableSpec
+      Paths_yaml_matrix
+  autogen-modules:
+      Paths_yaml_matrix
+  hs-source-dirs:
+      test
+  default-extensions:
+      DataKinds
+      DerivingStrategies
+      DisambiguateRecordFields
+      ExplicitNamespaces
+      GADTs
+      LambdaCase
+      RoleAnnotations
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , attoparsec
+    , barbies
+    , base >=4.11 && <10
+    , bytestring
+    , hashable
+    , hspec
+    , text
+    , unliftio
+    , unordered-containers
+    , yaml
+    , yaml-matrix
+  default-language: GHC2021
