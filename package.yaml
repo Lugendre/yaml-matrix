@@ -30,8 +30,11 @@ dependencies:
 - barbies
 - bytestring
 - hashable
+- lens-aeson
+- microlens
+- reflection
+- safe-exceptions
 - text
-- unliftio
 - unordered-containers
 - yaml
 

@@ -26,7 +26,8 @@ source-repository head
 
 library
   exposed-modules:
-      Data.Yaml.MaybeVariable
+      Data.Yaml.Matrix
+      Data.Yaml.Matrix.Variable
   other-modules:
       Paths_yaml_matrix
   autogen-modules:
@@ -49,8 +50,11 @@ library
     , base >=4.11 && <10
     , bytestring
     , hashable
+    , lens-aeson
+    , microlens
+    , reflection
+    , safe-exceptions
     , text
-    , unliftio
     , unordered-containers
     , yaml
   default-language: GHC2021
@@ -79,9 +83,12 @@ executable yaml-matrix
     , base >=4.11 && <10
     , bytestring
     , hashable
+    , lens-aeson
+    , microlens
     , optparse-simple
+    , reflection
+    , safe-exceptions
     , text
-    , unliftio
     , unordered-containers
     , yaml
     , yaml-matrix
@@ -91,7 +98,8 @@ test-suite yaml-matrix-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Data.Yaml.MaybeVariableSpec
+      Data.Yaml.Matrix.VariableSpec
+      Data.Yaml.MatrixSpec
       Paths_yaml_matrix
   autogen-modules:
       Paths_yaml_matrix
@@ -114,8 +122,11 @@ test-suite yaml-matrix-test
     , bytestring
     , hashable
     , hspec
+    , lens-aeson
+    , microlens
+    , reflection
+    , safe-exceptions
     , text
-    , unliftio
     , unordered-containers
     , yaml
     , yaml-matrix
