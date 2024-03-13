@@ -8,22 +8,35 @@ module Data.Yaml.MatrixSpec (spec) where
 
 import Barbies
 import Barbies.Bare
-import Data.Aeson (FromJSON, ToJSON, encode, throwDecodeStrict)
+import Data.Aeson (FromJSON, ToJSON, encode)
 import Data.ByteString (ByteString, toStrict)
 import Data.Functor.Identity (Identity)
+import Data.Maybe (fromJust)
 import Data.Text (Text)
+import Data.Yaml qualified as Y
 import Data.Yaml.Matrix
 import GHC.Generics (Generic)
 import Test.Hspec
 
 spec :: Spec
-spec = describe "simple decode tests with variables matrix" $ do
-  it "should be equal" $ do
-    withVariableMatrix @HogeB
-      json1
-      "matrix"
-      throwDecodeStrict
-      `shouldBe` Just [example1]
+spec = do
+  describe "simple decode tests with variables matrix" $ do
+    it "should be equal" $ do
+      let matrix = fromJust $ decodeVariableMatrixJSON json1 "matrix"
+      withVariableMatrix' @HogeB
+        matrix
+        (decodeJSON @HogeB)
+        json1
+        `shouldBe` Just [example1]
+
+  describe "simple decode tests with yaml" $ do
+    it "should be equal" $ do
+      h <-
+        withVariableMatrix
+          "matrix"
+          (decodeYaml @HogeB)
+          yaml1
+      h `shouldBe` [example1]
 
 data HogeB t f
   = HogeB
@@ -68,11 +81,17 @@ data HogeJSON = HogeJSON
 example1 :: HogeB Bare Identity
 example1 = HogeB{hoge = 1, fuga = "fuga"}
 
-json1 :: ByteString
-json1 =
+testJSON :: HogeJSON
+testJSON =
   let
     matrix = MatrixJSON{hoge = [1], fuga = ["fuga"]}
     hoge = "${{hoge}}"
     fuga = "${{fuga}}"
    in
-    toStrict $ encode HogeJSON{..}
+    HogeJSON{..}
+
+json1 :: ByteString
+json1 = toStrict $ encode testJSON
+
+yaml1 :: ByteString
+yaml1 = Y.encode testJSON

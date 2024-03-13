@@ -9,22 +9,28 @@ module Data.Yaml.Matrix.Variable (
   VariableEnv,
   WithVariable (..),
   withVariableEnv,
+  decodeJSON,
+  decodeYaml,
 ) where
 
 import Barbies (TraversableB, bsequence')
 import Barbies.Bare (Bare, BareB (bstrip), Covered)
 import Control.Applicative ((<|>))
-import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON, ToJSONKey, Value (..))
+import Control.Exception.Safe (MonadThrow)
+import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON, ToJSONKey, Value (..), throwDecodeStrict)
 import Data.Attoparsec.Text
 import Data.Attoparsec.Text qualified as A
+import Data.ByteString (ByteString)
 import Data.Coerce (coerce)
 import Data.Foldable (fold)
 import Data.Functor (void)
 import Data.Functor.Identity (Identity)
 import Data.HashMap.Strict qualified as HM
 import Data.Hashable (Hashable)
+import Data.Kind (Type)
 import Data.Reflection (Given, give, given)
 import Data.Text (Text)
+import Data.Yaml qualified as Y
 import GHC.Generics (Generic, Generic1, Generically1 (..))
 
 newtype VariableName = VariableName Text
@@ -81,10 +87,34 @@ variable = do
   pure $ VariableName name
 
 withVariableEnv ::
-  (TraversableB (b Covered), BareB b, Functor f) =>
   VariableEnv ->
+  ((Given VariableEnv) => bs -> m (b Bare Identity)) ->
   bs ->
-  ((Given VariableEnv) => bs -> f (b Covered WithVariable)) ->
-  f (b Bare Identity)
-withVariableEnv varEnv bs decoder =
-  bstrip . runWithVariable . bsequence' <$> give varEnv (decoder bs)
+  m (b Bare Identity)
+withVariableEnv = give
+
+decodeJSON ::
+  forall b m.
+  ( TraversableB (b Covered)
+  , BareB b
+  , MonadThrow m
+  , FromJSON (b Covered WithVariable)
+  ) =>
+  ByteString ->
+  m (b Bare Identity)
+decodeJSON bs =
+  bstrip . runWithVariable . bsequence'
+    <$> throwDecodeStrict @(b Covered WithVariable) @m bs
+
+decodeYaml ::
+  forall (b :: Type -> (Type -> Type) -> Type) m.
+  ( MonadThrow m
+  , FromJSON (b Covered WithVariable)
+  , TraversableB (b Covered)
+  , BareB b
+  ) =>
+  ByteString ->
+  m (b Bare Identity)
+decodeYaml bs =
+  bstrip . runWithVariable . bsequence'
+    <$> Y.decodeThrow @m @(b Covered WithVariable) bs

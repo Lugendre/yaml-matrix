@@ -6,7 +6,7 @@ module Data.Yaml.Matrix.VariableSpec (spec) where
 
 import Barbies
 import Barbies.Bare
-import Data.Aeson (FromJSON, ToJSON, Value (..), eitherDecodeStrict, encode)
+import Data.Aeson (FromJSON, ToJSON, Value (..), encode)
 import Data.ByteString (ByteString, toStrict)
 import Data.Functor.Identity (Identity)
 import Data.HashMap.Strict qualified as HM
@@ -20,15 +20,15 @@ spec = do
     it "should be equal" $ do
       withVariableEnv
         mempty
+        (decodeJSON @HogeB)
         json1
-        (eitherDecodeStrict @(HogeB Covered WithVariable))
-        `shouldBe` Right example1
+        `shouldBe` Just example1
     it "should be equal" $ do
       withVariableEnv
         variableEnv1
+        decodeJSON
         json2
-        (eitherDecodeStrict @(HogeB Covered WithVariable))
-        `shouldBe` Right example1
+        `shouldBe` Just example1
 
 data HogeB t f
   = HogeB

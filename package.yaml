@@ -29,6 +29,7 @@ dependencies:
 - attoparsec
 - barbies
 - bytestring
+- constraints
 - hashable
 - lens-aeson
 - microlens
